@@ -10,8 +10,8 @@ class UpsertJugadorUseCase @Inject constructor(
     private val validator: JugadorValidator
 ) {
     suspend operator fun invoke(jugador: Jugador): Result<Int>{
-        val nombreResult =validator.validateNombre(jugador.nombres)
-        if(!nombreResult.isValid){
+        val nombreResult = validator.validateNombreUnico(jugador.nombres, jugador.jugadorId)
+        if (!nombreResult.isValid) {
             return Result.failure(IllegalArgumentException(nombreResult.error))
         }
         val partidaResult = validator.validatePartida(jugador.partidas.toString())
