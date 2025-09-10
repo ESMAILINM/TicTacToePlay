@@ -53,15 +53,16 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     //navegacion
-    implementation("androidx.navigation:navigation-compose:2.8.0-rc01")
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlin.serialization.json)
     //room
-    implementation("androidx.room:room-runtime:2.6.1")
     implementation(libs.material3)
-    annotationProcessor("androidx.room:room-compiler:2.6.1")
-    ksp("androidx.room:room-compiler:2.6.1")
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
     // optional - Kotlin Extensions and Coroutines support for Room
-    implementation("androidx.room:room-ktx:2.6.1")
+
     //Hilt
     implementation ("com.google.dagger:hilt-android:2.57.1")
     ksp("com.google.dagger:hilt-android-compiler:2.57.1")
