@@ -1,4 +1,4 @@
-package edu.ucne.composedemo.ui.theme
+package edu.ucne.TicTacToePlay.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

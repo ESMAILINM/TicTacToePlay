@@ -1,4 +1,4 @@
-package edu.ucne.composedemo
+package edu.ucne.TicTacToePlay
 
 import org.junit.Test
 
