@@ -1,8 +1,9 @@
 package edu.ucne.TicTacToePlay.domain.usecase.partidaUseCase
 
 import edu.ucne.TicTacToePlay.domain.repository.PartidaRepository
+import javax.inject.Inject
 
-class DeletePartidaUseCase(
+class DeletePartidaUseCase @Inject constructor(
     private val repository: PartidaRepository
 ) {
 
