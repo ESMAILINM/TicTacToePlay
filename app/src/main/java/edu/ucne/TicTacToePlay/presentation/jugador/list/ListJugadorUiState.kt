@@ -1,4 +1,4 @@
-package edu.ucne.TicTacToePlay.tareas.list
+package edu.ucne.TicTacToePlay.presentation.jugador.list
 
 import edu.ucne.TicTacToePlay.domain.model.Jugador
 

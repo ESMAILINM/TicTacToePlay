@@ -1,4 +1,4 @@
-package edu.ucne.TicTacToePlay.tareas.edit
+package edu.ucne.TicTacToePlay.presentation.jugador.edit
 
 interface EditJugadorEvent {
     data class Load(val id: Int?): EditJugadorEvent
