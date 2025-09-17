@@ -2,6 +2,7 @@ package edu.ucne.TicTacToePlay.presentation.partidas
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.ucne.TicTacToePlay.domain.model.Partida
 import edu.ucne.TicTacToePlay.domain.usecase.partidaUseCase.DeletePartidaUseCase
 import edu.ucne.TicTacToePlay.domain.usecase.partidaUseCase.GetPartidaUseCase
@@ -16,14 +17,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class EditPartidaViewModel(
+import javax.inject.Inject
+
+@HiltViewModel
+class EditPartidaViewModel @Inject constructor(
     private val upsertPartidaUseCase: UpsertPartidaUseCase,
     private val getPartidaUseCase: GetPartidaUseCase,
     private val deletePartidaUseCase: DeletePartidaUseCase,
-    private val observePartidaUseCase: ObservePartidaUseCase
+    private val observePartidaUseCase: ObservePartidaUseCase,
+    private val validator: PartidaValidator
 ) : ViewModel() {
-
-    private val validator = PartidaValidator()
 
     private val _state = MutableStateFlow(EditPartidaUiState())
     val state: StateFlow<EditPartidaUiState> = _state.asStateFlow()
