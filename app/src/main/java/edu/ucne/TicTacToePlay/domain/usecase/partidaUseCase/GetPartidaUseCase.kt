@@ -2,8 +2,9 @@ package edu.ucne.TicTacToePlay.domain.usecase.partidaUseCase
 
 import edu.ucne.TicTacToePlay.domain.model.Partida
 import edu.ucne.TicTacToePlay.domain.repository.PartidaRepository
+import javax.inject.Inject
 
-class GetPartidaUseCase(
+class GetPartidaUseCase @Inject constructor(
     private val repository: PartidaRepository
 ) {
 
