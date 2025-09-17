@@ -1,4 +1,4 @@
-package edu.ucne.TicTacToePlay.domain.usecase
+package edu.ucne.TicTacToePlay.domain.usecase.jugadorUseCase
 
 import edu.ucne.TicTacToePlay.domain.model.Jugador
 import edu.ucne.TicTacToePlay.domain.repository.JugadorRepository
