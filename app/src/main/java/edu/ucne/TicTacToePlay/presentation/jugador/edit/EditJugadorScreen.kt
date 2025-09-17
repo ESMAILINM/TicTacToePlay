@@ -1,4 +1,4 @@
-package edu.ucne.TicTacToePlay.tareas.edit
+package edu.ucne.TicTacToePlay.presentation.jugador.edit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

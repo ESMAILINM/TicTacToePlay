@@ -1,4 +1,5 @@
-package edu.ucne.TicTacToePlay.tareas.local
+package edu.ucne.TicTacToePlay.tareas.local.entities
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

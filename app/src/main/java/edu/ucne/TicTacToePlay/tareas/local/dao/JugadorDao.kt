@@ -1,9 +1,11 @@
-package edu.ucne.TicTacToePlay.tareas.local
+package edu.ucne.TicTacToePlay.tareas.local.dao
+
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import edu.ucne.TicTacToePlay.domain.model.Jugador
+import edu.ucne.TicTacToePlay.tareas.local.entities.JugadorEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

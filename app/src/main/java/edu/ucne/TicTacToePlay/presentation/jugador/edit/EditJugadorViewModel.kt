@@ -1,12 +1,12 @@
-package edu.ucne.TicTacToePlay.tareas.edit
+package edu.ucne.TicTacToePlay.presentation.jugador.edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.ucne.TicTacToePlay.domain.model.Jugador
-import edu.ucne.TicTacToePlay.domain.usecase.DeleteJugadorUseCase
-import edu.ucne.TicTacToePlay.domain.usecase.GetJugadorUseCase
-import edu.ucne.TicTacToePlay.domain.usecase.UpsertJugadorUseCase
+import edu.ucne.TicTacToePlay.domain.usecase.jugadorUseCase.DeleteJugadorUseCase
+import edu.ucne.TicTacToePlay.domain.usecase.jugadorUseCase.GetJugadorUseCase
+import edu.ucne.TicTacToePlay.domain.usecase.jugadorUseCase.UpsertJugadorUseCase
 import edu.ucne.TicTacToePlay.domain.validation.JugadorValidator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

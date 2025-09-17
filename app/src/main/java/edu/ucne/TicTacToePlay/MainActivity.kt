@@ -3,24 +3,20 @@ package edu.ucne.TicTacToePlay
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
-import edu.ucne.TicTacToePlay.tareas.edit.EditJugadorScreen
-import edu.ucne.TicTacToePlay.tareas.list.ListJugadorScreen
+import edu.ucne.TicTacToePlay.presentation.jugador.edit.EditJugadorScreen
+import edu.ucne.TicTacToePlay.presentation.jugador.list.ListJugadorScreen
+import edu.ucne.TicTacToePlay.presentation.partida.EditPartidaScreen
+import edu.ucne.TicTacToePlay.presentation.partida.list.ListPartidaScreen
 import edu.ucne.TicTacToePlay.ui.theme.TicTacToePlayTheme
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -55,7 +51,20 @@ class MainActivity : ComponentActivity() {
                                 jugadorId = jugadorId
                             )
                         }
+                        composable("list_partida_screen") {
+                            ListPartidaScreen(navController = navController)
+                        }
+                        composable(
+                            route = "edit_partida_screen/{partidaId}",
+                            arguments = listOf(navArgument("partidaId") { type = NavType.IntType })
+                        ) { backStackEntry ->
+                            val partidaId = backStackEntry.arguments?.getInt("partidaId")
+                            EditPartidaScreen(navController = navController, partidaId = partidaId)
+                        }
+
+
                     }
+
                 }
             }
         }
