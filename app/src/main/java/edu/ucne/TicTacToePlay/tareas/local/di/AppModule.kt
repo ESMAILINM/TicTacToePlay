@@ -6,10 +6,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
-import edu.ucne.TicTacToePlay.tareas.local.JugadorDao
-import edu.ucne.TicTacToePlay.tareas.local.JugadorDataBase
+import edu.ucne.TicTacToePlay.tareas.local.dao.JugadorDao
+import edu.ucne.TicTacToePlay.tareas.local.database.JugadorDataBase
 import javax.inject.Singleton
 import dagger.hilt.components.SingletonComponent
+import edu.ucne.TicTacToePlay.tareas.local.dao.PartidaDao
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -28,5 +29,10 @@ object AppModule {
     @Singleton
     fun provideTaskDao(db: JugadorDataBase): JugadorDao {
         return db.jugadorDao()
+    }
+    @Provides
+    @Singleton
+    fun providePartidaDao(db: JugadorDataBase): PartidaDao {
+        return db.partidaDao()
     }
 }
