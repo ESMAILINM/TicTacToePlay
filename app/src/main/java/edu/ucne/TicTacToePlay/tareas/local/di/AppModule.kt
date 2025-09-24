@@ -10,6 +10,7 @@ import edu.ucne.TicTacToePlay.tareas.local.dao.JugadorDao
 import edu.ucne.TicTacToePlay.tareas.local.database.JugadorDataBase
 import javax.inject.Singleton
 import dagger.hilt.components.SingletonComponent
+import edu.ucne.TicTacToePlay.tareas.local.dao.LogroDao
 import edu.ucne.TicTacToePlay.tareas.local.dao.PartidaDao
 
 @InstallIn(SingletonComponent::class)
@@ -34,5 +35,10 @@ object AppModule {
     @Singleton
     fun providePartidaDao(db: JugadorDataBase): PartidaDao {
         return db.partidaDao()
+    }
+    @Provides
+    @Singleton
+    fun provideLogroDao(db: JugadorDataBase): LogroDao {
+        return db.logroDao()
     }
 }
