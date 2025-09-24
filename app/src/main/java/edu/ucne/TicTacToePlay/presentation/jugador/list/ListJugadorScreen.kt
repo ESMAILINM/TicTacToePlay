@@ -1,3 +1,4 @@
+// ListJugadorScreen.kt
 package edu.ucne.TicTacToePlay.presentation.jugador.list
 
 import androidx.compose.foundation.clickable
@@ -7,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -19,6 +21,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import edu.ucne.TicTacToePlay.domain.model.Jugador
+import edu.ucne.TicTacToePlay.ui.theme.achievement
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,7 +36,21 @@ fun ListJugadorScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Jugadores") },
-                actions = {
+                actions = {IconButton(onClick = { navController.navigate("list_logro_screen") }) {
+                    Surface(
+                        tonalElevation = 4.dp,
+                        shape = MaterialTheme.shapes.small,
+                        color = MaterialTheme.colorScheme.surfaceVariant
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = "Ver logros",
+                            tint = MaterialTheme.colorScheme.achievement,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                }
+
                     IconButton(onClick = { navController.navigate("list_partida_screen") }) {
                         Icon(Icons.Default.List, contentDescription = "Ver partidas")
                     }
@@ -42,7 +60,7 @@ fun ListJugadorScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { navController.navigate("edit_jugador_screen/0") },
-                containerColor = Color.Gray
+                containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Añadir jugador")
             }
@@ -101,7 +119,7 @@ private fun JugadorItem(
             Column(modifier = Modifier.weight(1f)) {
                 Text(jugador.nombres, style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.height(4.dp))
-                Text("Partidas: ${jugador.partidas}")
+                Text("Partidas: ${jugador.partidas}", style = MaterialTheme.typography.bodyMedium)
             }
             IconButton(onClick = onDeleteClick) {
                 Icon(Icons.Default.Delete, contentDescription = "Eliminar jugador", tint = MaterialTheme.colorScheme.error)
