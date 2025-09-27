@@ -7,42 +7,40 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import edu.ucne.TicTacToePlay.domain.model.Jugador
 import edu.ucne.TicTacToePlay.domain.model.Partida
+import edu.ucne.TicTacToePlay.presentation.jugador.list.JugadorListViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListPartidaScreen(
     navController: NavController,
-    viewModel: ListPartidaViewModel = hiltViewModel()
+    partidaViewModel: ListPartidaViewModel = hiltViewModel(),
+    jugadorViewModel: JugadorListViewModel = hiltViewModel()
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val partidasState by partidaViewModel.state.collectAsStateWithLifecycle()
+    val jugadoresState by jugadorViewModel.state.collectAsStateWithLifecycle()
+
+    val jugadorMap = remember(jugadoresState.jugadores) {
+        jugadoresState.jugadores.associateBy({ it.jugadorId }, { it.nombres })
+    }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Partidas") },
-                actions = {
-                    IconButton(onClick = { navController.navigate("list_jugador_screen") }) {
-                        Icon(Icons.Default.Person, contentDescription = "Ver jugadores")
-                    }
-                }
-            )
-        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { navController.navigate("edit_partida_screen/0") },
-                containerColor = Color.Gray
+                containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Añadir partida")
             }
@@ -53,26 +51,34 @@ fun ListPartidaScreen(
                 .padding(padding)
                 .fillMaxSize()
         ) {
-            if (state.isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            } else if (state.partidas.isEmpty()) {
-                Text("No hay partidas. ¡Añade una!", modifier = Modifier.align(Alignment.Center))
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(state.partidas, key = { it.partidaId }) { partida ->
-                        PartidaItem(
-                            partida = partida,
-                            onPartidaClick = {
-                                navController.navigate("edit_partida_screen/${partida.partidaId}")
-                            },
-                            onDeleteClick = {
-                                viewModel.onEvent(ListPartidaUiEvent.OnDeletePartidaClick(partida))
-                            }
-                        )
+            when {
+                partidasState.isLoading -> {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
+                partidasState.partidas.isEmpty() -> {
+                    Text(
+                        "No hay partidas. ¡Añade una!",
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(partidasState.partidas, key = { it.partidaId }) { partida ->
+                            PartidaItem(
+                                partida = partida,
+                                jugadorMap = jugadorMap,
+                                onPartidaClick = {
+                                    navController.navigate("edit_partida_screen/${partida.partidaId}")
+                                },
+                                onDeleteClick = {
+                                    partidaViewModel.onEvent(ListPartidaUiEvent.OnDeletePartidaClick(partida))
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -83,6 +89,7 @@ fun ListPartidaScreen(
 @Composable
 private fun PartidaItem(
     partida: Partida,
+    jugadorMap: Map<Int, String>,
     onPartidaClick: () -> Unit,
     onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -90,17 +97,64 @@ private fun PartidaItem(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onPartidaClick)
+            .clickable(onClick = onPartidaClick),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text("Partida ID: ${partida.partidaId}", style = MaterialTheme.typography.bodyLarge)
-            Text("Fecha: ${partida.fecha}", style = MaterialTheme.typography.bodyMedium)
-            Text("Jugador 1: ${partida.jugador1Id} | Jugador 2: ${partida.jugador2Id}", style = MaterialTheme.typography.bodyMedium)
-            Text("Ganador: ${partida.ganadorId ?: "N/A"}", style = MaterialTheme.typography.bodyMedium)
-            Text("Finalizada: ${if (partida.esFinalizada) "Sí" else "No"}", style = MaterialTheme.typography.bodyMedium)
+        Box(modifier = Modifier.fillMaxWidth()) {
+            // Botón eliminar
+            IconButton(
+                onClick = onDeleteClick,
+                modifier = Modifier.align(Alignment.TopEnd)
+            ) {
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = "Eliminar partida",
+                    tint = MaterialTheme.colorScheme.error
+                )
+            }
 
-            IconButton(onClick = onDeleteClick) {
-                Icon(Icons.Default.Delete, contentDescription = "Eliminar partida", tint = MaterialTheme.colorScheme.error)
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    "Partida #${partida.partidaId}",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    "Fecha: ${partida.fecha}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column {
+                        Text("Jugador 1:", style = MaterialTheme.typography.labelMedium)
+                        Text(jugadorMap[partida.jugador1Id] ?: "N/A", style = MaterialTheme.typography.bodyMedium)
+                    }
+                    Column {
+                        Text("Jugador 2:", style = MaterialTheme.typography.labelMedium)
+                        Text(jugadorMap[partida.jugador2Id] ?: "N/A", style = MaterialTheme.typography.bodyMedium)
+                    }
+                    Column {
+                        Text("Ganador:", style = MaterialTheme.typography.labelMedium)
+                        Text(jugadorMap[partida.ganadorId ?: -1] ?: "N/A", style = MaterialTheme.typography.bodyMedium)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    "Finalizada: ${if (partida.esFinalizada) "Sí" else "No"}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = if (partida.esFinalizada)
+                        MaterialTheme.colorScheme.primary
+                    else
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }
