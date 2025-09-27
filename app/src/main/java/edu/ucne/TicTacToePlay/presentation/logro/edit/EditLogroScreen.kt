@@ -107,9 +107,8 @@ private fun EditLogroBody(
                     onClick = { onEvent(EditLogroUiEvent.Save) },
                     enabled = !state.isSaving,
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFFC0CB)
-                    )
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+
                 ) {
                     Text("Guardar")
                 }
@@ -118,7 +117,8 @@ private fun EditLogroBody(
                     OutlinedButton(
                         onClick = { onEvent(EditLogroUiEvent.Delete) },
                         enabled = !state.isDeleting,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
                     ) {
                         Text("Eliminar")
                     }
