@@ -1,4 +1,4 @@
-package edu.ucne.TicTacToePlay.presentation.partidas
+package edu.ucne.TicTacToePlay.presentation.partida
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,17 +6,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.ucne.TicTacToePlay.domain.model.Partida
 import edu.ucne.TicTacToePlay.domain.usecase.partidaUseCase.DeletePartidaUseCase
 import edu.ucne.TicTacToePlay.domain.usecase.partidaUseCase.GetPartidaUseCase
-import edu.ucne.TicTacToePlay.domain.usecase.partidaUseCase.ObservePartidaUseCase
 import edu.ucne.TicTacToePlay.domain.usecase.partidaUseCase.UpsertPartidaUseCase
 import edu.ucne.TicTacToePlay.domain.validation.PartidaValidator
-import edu.ucne.TicTacToePlay.presentation.partida.EditPartidaUiEvent
-import edu.ucne.TicTacToePlay.presentation.partida.EditPartidaUiState
+import edu.ucne.TicTacToePlay.utils.getFechaActual
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,7 +21,6 @@ class EditPartidaViewModel @Inject constructor(
     private val upsertPartidaUseCase: UpsertPartidaUseCase,
     private val getPartidaUseCase: GetPartidaUseCase,
     private val deletePartidaUseCase: DeletePartidaUseCase,
-    private val observePartidaUseCase: ObservePartidaUseCase,
     private val validator: PartidaValidator
 ) : ViewModel() {
 
@@ -46,25 +42,28 @@ class EditPartidaViewModel @Inject constructor(
 
     private fun loadPartida(partidaId: Int) {
         viewModelScope.launch {
-            _state.update { it.copy(isSaving = true) }
-
-            getPartidaUseCase(partidaId).onSuccess { partida ->
-                partida?.let {
-                    _state.update { state ->
-                        state.copy(
-                            partidaId = it.partidaId,
-                            fecha = it.fecha,
-                            jugador1Id = it.jugador1Id,
-                            jugador2Id = it.jugador2Id,
-                            ganadorId = it.ganadorId,
-                            esFinalizada = it.esFinalizada,
-                            isNew = false,
-                            isSaving = false
-                        )
-                    }
-                } ?: _state.update { it.copy(isSaving = false) }
-            }.onFailure {
-                _state.update { it.copy(isSaving = false) }
+            if (partidaId == 0) {
+                _state.update { it.copy(fecha = getFechaActual(), isNew = true) }
+            } else {
+                _state.update { it.copy(isSaving = true) }
+                getPartidaUseCase(partidaId).onSuccess { partida ->
+                    partida?.let {
+                        _state.update { state ->
+                            state.copy(
+                                partidaId = it.partidaId,
+                                fecha = it.fecha,
+                                jugador1Id = it.jugador1Id,
+                                jugador2Id = it.jugador2Id,
+                                ganadorId = it.ganadorId,
+                                esFinalizada = it.esFinalizada,
+                                isNew = false,
+                                isSaving = false
+                            )
+                        }
+                    } ?: _state.update { it.copy(isSaving = false) }
+                }.onFailure {
+                    _state.update { it.copy(isSaving = false) }
+                }
             }
         }
     }
@@ -72,17 +71,14 @@ class EditPartidaViewModel @Inject constructor(
     private fun savePartida() {
         val current = _state.value
 
-        // Validaciones
         val jugadoresValid = validator.validateJugadores(current.jugador1Id, current.jugador2Id)
-        val fechaValid = validator.validateFecha(current.fecha)
         val ganadorValid = validator.validateGanador(current.ganadorId, current.jugador1Id, current.jugador2Id)
 
-        if (!jugadoresValid.isValid || !fechaValid.isValid || !ganadorValid.isValid) {
+        if (!jugadoresValid.isValid || !ganadorValid.isValid) {
             _state.update {
                 it.copy(
                     jugador1Error = jugadoresValid.error,
                     jugador2Error = jugadoresValid.error,
-                    fechaError = fechaValid.error,
                     ganadorError = ganadorValid.error
                 )
             }
