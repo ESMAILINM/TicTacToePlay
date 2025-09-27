@@ -15,12 +15,11 @@ import edu.ucne.TicTacToePlay.tareas.local.entities.LogroEntity
         PartidaEntity::class,
         LogroEntity::class
     ],
-    version = 4,
+    version = 6,
     exportSchema = false,
 )
 abstract class JugadorDataBase : RoomDatabase() {
     abstract fun jugadorDao(): JugadorDao
     abstract fun partidaDao(): PartidaDao
     abstract fun logroDao(): LogroDao
-
 }
