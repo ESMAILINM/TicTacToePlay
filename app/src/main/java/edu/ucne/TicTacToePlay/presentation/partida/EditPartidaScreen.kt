@@ -34,13 +34,12 @@ fun EditPartidaScreen(
     var showJugadorSheet by remember { mutableStateOf(false) }
     var showGanadorSheet by remember { mutableStateOf(false) }
 
-    // Cargar partida
     LaunchedEffect(partidaId) {
         viewModel.onEvent(EditPartidaUiEvent.Load(partidaId ?: 0))
         if (state.isNew) viewModel.onEvent(EditPartidaUiEvent.FechaChanged(getFechaActual()))
     }
 
-    // Volver a la lista al guardar o eliminar
+
     LaunchedEffect(state.saved, state.deleted) {
         if (state.saved || state.deleted) {
             navController.popBackStack()
@@ -73,7 +72,6 @@ fun EditPartidaScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Jugador 1
             OutlinedTextField(
                 value = jugador1Name,
                 onValueChange = {},
@@ -89,7 +87,6 @@ fun EditPartidaScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Jugador 2
             OutlinedTextField(
                 value = jugador2Name,
                 onValueChange = {},
@@ -105,7 +102,7 @@ fun EditPartidaScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Checkbox finalizada
+
             Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
                 Checkbox(
                     checked = state.esFinalizada,
@@ -126,7 +123,7 @@ fun EditPartidaScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Selección de ganador si está finalizada
+
             if (state.esFinalizada) {
                 OutlinedTextField(
                     value = ganadorName,
@@ -141,7 +138,6 @@ fun EditPartidaScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Botones Guardar / Eliminar
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier.fillMaxWidth()) {
                 Button(
                     onClick = { viewModel.onEvent(EditPartidaUiEvent.Save) },
@@ -166,13 +162,11 @@ fun EditPartidaScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Mensajes de operación
             if (state.saved) Text("Partida guardada correctamente!", color = MaterialTheme.colorScheme.primary)
             if (state.deleted) Text("Partida eliminada", color = MaterialTheme.colorScheme.error)
         }
     }
 
-    // BottomSheet para jugadores
     if (showJugadorSheet) {
         JugadorSelectionSheet(
             jugadores = jugadoresState.jugadores,
@@ -188,7 +182,6 @@ fun EditPartidaScreen(
         )
     }
 
-    // BottomSheet para ganador
     if (showGanadorSheet) {
         val posiblesGanadores = listOfNotNull(
             jugadoresState.jugadores.find { it.jugadorId == state.jugador1Id },

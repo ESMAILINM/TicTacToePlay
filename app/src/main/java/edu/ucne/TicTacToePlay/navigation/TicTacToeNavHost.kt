@@ -50,7 +50,6 @@ fun TicTacToeNavHost(navHostController: NavHostController) {
   scope.launch { drawerState.close() }
  }
 
- // Mapea cada pantalla a su nombre y su icono
  val currentScreenIconAndTitle = when (selectedItem.value) {
   Screen.ListJugador.route -> Icons.Filled.Person to "Jugadores"
   Screen.Jugador.route -> Icons.Filled.Person to "Editar Jugador"
