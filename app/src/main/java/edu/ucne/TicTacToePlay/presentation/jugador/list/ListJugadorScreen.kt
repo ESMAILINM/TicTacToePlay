@@ -1,4 +1,3 @@
-// ListJugadorScreen.kt
 package edu.ucne.TicTacToePlay.presentation.jugador.list
 
 import androidx.compose.foundation.clickable
@@ -8,21 +7,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import edu.ucne.TicTacToePlay.domain.model.Jugador
-import edu.ucne.TicTacToePlay.ui.theme.achievement
-
+import edu.ucne.TicTacToePlay.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,33 +28,9 @@ fun ListJugadorScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Jugadores") },
-                actions = {IconButton(onClick = { navController.navigate("list_logro_screen") }) {
-                    Surface(
-                        tonalElevation = 4.dp,
-                        shape = MaterialTheme.shapes.small,
-                        color = MaterialTheme.colorScheme.surfaceVariant
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = "Ver logros",
-                            tint = MaterialTheme.colorScheme.achievement,
-                            modifier = Modifier.padding(8.dp)
-                        )
-                    }
-                }
-
-                    IconButton(onClick = { navController.navigate("list_partida_screen") }) {
-                        Icon(Icons.Default.List, contentDescription = "Ver partidas")
-                    }
-                }
-            )
-        },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { navController.navigate("edit_jugador_screen/0") },
+                onClick = { navController.navigate(Screen.Jugador.createRoute(0)) },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Añadir jugador")
@@ -71,26 +42,37 @@ fun ListJugadorScreen(
                 .padding(padding)
                 .fillMaxSize()
         ) {
-            if (state.isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            } else if (state.jugadores.isEmpty()) {
-                Text("No hay jugadores. ¡Añade uno!", modifier = Modifier.align(Alignment.Center))
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(state.jugadores, key = { it.jugadorId }) { jugador ->
-                        JugadorItem(
-                            jugador = jugador,
-                            onJugadorClick = {
-                                navController.navigate("edit_jugador_screen/${jugador.jugadorId}")
-                            },
-                            onDeleteClick = {
-                                viewModel.onEvent(ListJugadorUiEvent.OnDeleteJugadorClick(jugador))
-                            }
-                        )
+            when {
+                state.isLoading -> {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
+                state.jugadores.isEmpty() -> {
+                    Text(
+                        "No hay jugadores. ¡Añade uno!",
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(state.jugadores, key = { it.jugadorId }) { jugador ->
+                            JugadorItem(
+                                jugador = jugador,
+                                onJugadorClick = {
+                                    navController.navigate(
+                                        Screen.Jugador.createRoute(jugador.jugadorId)
+                                    )
+                                },
+                                onDeleteClick = {
+                                    viewModel.onEvent(
+                                        ListJugadorUiEvent.OnDeleteJugadorClick(jugador)
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -122,7 +104,11 @@ private fun JugadorItem(
                 Text("Partidas: ${jugador.partidas}", style = MaterialTheme.typography.bodyMedium)
             }
             IconButton(onClick = onDeleteClick) {
-                Icon(Icons.Default.Delete, contentDescription = "Eliminar jugador", tint = MaterialTheme.colorScheme.error)
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = "Eliminar jugador",
+                    tint = MaterialTheme.colorScheme.error
+                )
             }
         }
     }
