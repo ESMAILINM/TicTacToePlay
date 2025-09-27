@@ -121,7 +121,8 @@ class EditJugadorViewModel @Inject constructor(
             val jugador = Jugador(
                 jugadorId = id,
                 nombres = nombre,
-                partidas = partidasStr.toInt()
+                partidas = partidasStr.toInt(),
+
             )
 
             val result = upsertJugadorUseCase(jugador)

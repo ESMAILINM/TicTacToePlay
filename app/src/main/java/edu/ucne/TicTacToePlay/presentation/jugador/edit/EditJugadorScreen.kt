@@ -106,9 +106,7 @@ private fun EditJugadorBody(
                     onClick = { onEvent(EditJugadorEvent.Save) },
                     enabled = !state.isSaving,
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFFC0CB)
-                    )
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
                     Text("Guardar")
                 }
@@ -117,7 +115,8 @@ private fun EditJugadorBody(
                     OutlinedButton(
                         onClick = { onEvent(EditJugadorEvent.Delete) },
                         enabled = !state.isDeleting,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
                     ) {
                         Text("Eliminar")
                     }
