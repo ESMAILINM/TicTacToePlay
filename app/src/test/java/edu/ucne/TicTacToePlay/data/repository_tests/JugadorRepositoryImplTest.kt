@@ -14,7 +14,6 @@ import io.mockk.mockk
 import io.mockk.runs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -36,30 +35,25 @@ class JugadorRepositoryImplTest {
         val shared = MutableSharedFlow<List<JugadorEntity>>()
         every { dao.observeAll() } returns shared
 
-        val job = launch {
-            repository.observeJugador().test {
-                // First emission
-                shared.emit(listOf(JugadorEntity(jugadorId = 1, nombres = "Juan", partidas = 5)))
-                val first = awaitItem()
-                assertThat(first).containsExactly(Jugador(jugadorId = 1, nombres = "Juan", partidas = 5))
+        repository.observeJugador().test {
+            shared.emit(listOf(JugadorEntity(jugadorId = 1, nombres = "Juan", partidas = 5)))
+            val first = awaitItem()
+            assertThat(first).containsExactly(Jugador(jugadorId = 1, nombres = "Juan", partidas = 5))
 
-                // Second emission (multiple items)
-                shared.emit(
-                    listOf(
-                        JugadorEntity(jugadorId = 2, nombres = "Ana", partidas = 3),
-                        JugadorEntity(jugadorId = 3, nombres = "Luis", partidas = 4)
-                    )
+            shared.emit(
+                listOf(
+                    JugadorEntity(jugadorId = 2, nombres = "Ana", partidas = 3),
+                    JugadorEntity(jugadorId = 3, nombres = "Luis", partidas = 4)
                 )
-                val second = awaitItem()
-                assertThat(second).containsExactly(
-                    Jugador(jugadorId = 2, nombres = "Ana", partidas = 3),
-                    Jugador(jugadorId = 3, nombres = "Luis", partidas = 4)
-                )
+            )
+            val second = awaitItem()
+            assertThat(second).containsExactly(
+                Jugador(jugadorId = 2, nombres = "Ana", partidas = 3),
+                Jugador(jugadorId = 3, nombres = "Luis", partidas = 4)
+            )
 
-                cancelAndIgnoreRemainingEvents()
-            }
+            cancelAndIgnoreRemainingEvents()
         }
-        job.join()
     }
 
     @Test
