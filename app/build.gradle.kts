@@ -89,6 +89,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     testImplementation(kotlin("test"))
     testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("app.cash.turbine:turbine:1.0.0")
+    testImplementation("com.google.truth:truth:1.1.5")
     //iconos
     implementation("androidx.compose.material:material-icons-extended:1.6.1")
 
