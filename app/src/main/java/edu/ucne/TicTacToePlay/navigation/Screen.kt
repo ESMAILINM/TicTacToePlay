@@ -17,4 +17,5 @@ sealed class Screen(val route: String) {
     object Logro : Screen("edit_logro_screen/{logroId}") {
         fun createRoute(logroId: Int) = "edit_logro_screen/$logroId"
     }
+    object TicTacToe : Screen("tictactoe_screen/{jugadorId}")
 }
