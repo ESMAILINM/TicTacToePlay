@@ -7,14 +7,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,9 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.Group
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 
 @Composable
@@ -75,7 +79,7 @@ fun DrawerMenu(
 
                         DrawerItem(
                             title = "Partidas",
-                            icon = Icons.Filled.List,
+                            icon = Icons.Filled.SportsEsports,
                             isSelected = selectedItem.value == Screen.ListPartida.route,
                             screen = Screen.ListPartida,
                         ) { handleItemClick(it) }
@@ -93,5 +97,17 @@ fun DrawerMenu(
         drawerState = drawerState
     ) {
         content()
+    }
+}
+@Preview(showBackground = true)
+@Composable
+fun DrawerMenuPreview() {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
+    val navController = rememberNavController()
+    DrawerMenu(
+        drawerState = drawerState,
+        navHostController = navController
+    ) {
+        Text("Contenido principal de ejemplo")
     }
 }

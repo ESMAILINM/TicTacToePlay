@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -113,3 +114,79 @@ private fun JugadorItem(
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun JugadorItemPreview() {
+    JugadorItem(
+        jugador = Jugador(jugadorId = 1, nombres = "Juan Pérez", partidas = 5),
+        onJugadorClick = {},
+        onDeleteClick = {}
+    )
+}
+@Composable
+fun ListJugadorScreenContent(
+    state: ListJugadorUiState,
+    onJugadorClick: (Jugador) -> Unit = {},
+    onDeleteClick: (Jugador) -> Unit = {},
+    onAddClick: () -> Unit = {}
+) {
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = onAddClick,
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Añadir jugador")
+            }
+        }
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+        ) {
+            when {
+                state.isLoading -> {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
+                state.jugadores.isEmpty() -> {
+                    Text(
+                        "No hay jugadores. ¡Añade uno!",
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(state.jugadores, key = { it.jugadorId }) { jugador ->
+                            JugadorItem(
+                                jugador = jugador,
+                                onJugadorClick = { onJugadorClick(jugador) },
+                                onDeleteClick = { onDeleteClick(jugador) }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 400, heightDp = 700)
+@Composable
+fun ListJugadorScreenPreview() {
+    ListJugadorScreenContent(
+        state = ListJugadorUiState(
+            isLoading = false,
+            jugadores = listOf(
+                Jugador(1, "Juan Pérez", 5),
+                Jugador(2, "Ana Gómez", 3)
+            )
+        )
+    )
+}
+

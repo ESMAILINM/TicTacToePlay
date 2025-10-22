@@ -13,13 +13,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import edu.ucne.TicTacToePlay.domain.model.Jugador
 import edu.ucne.TicTacToePlay.domain.model.Partida
 import edu.ucne.TicTacToePlay.presentation.jugador.list.JugadorListViewModel
+import edu.ucne.TicTacToePlay.ui.theme.TicTacToePlayTheme
+import java.time.LocalDate
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,7 +41,7 @@ fun ListPartidaScreen(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { navController.navigate("edit_partida_screen/0") },
+                onClick = { navController.navigate("tictactoe_screen/0") },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Añadir partida")
@@ -156,6 +158,33 @@ private fun PartidaItem(
                         MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+        }
+    }
+}
+@Preview(showBackground = true, name = "Partida Item Preview")
+@Composable
+private fun PartidaItemPreview() {
+    val partidaDeEjemplo = Partida(
+        partidaId = 101,
+        fecha = LocalDate.now().toString(),
+        jugador1Id = 1,
+        jugador2Id = 2,
+        ganadorId = 1,
+        esFinalizada = true
+    )
+
+    val mapaDeJugadores = mapOf(
+        1 to "Esmailin",
+        2 to "Ana"
+    )
+    TicTacToePlayTheme {
+        Surface {
+            PartidaItem(
+                partida = partidaDeEjemplo,
+                jugadorMap = mapaDeJugadores,
+                onPartidaClick = {},
+                onDeleteClick = {}
+            )
         }
     }
 }

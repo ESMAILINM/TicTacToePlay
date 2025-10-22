@@ -58,10 +58,13 @@ dependencies {
     //navegacion
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlin.serialization.json)
+
     //room
     implementation(libs.material3)
     implementation(libs.androidx.room.runtime)
     implementation(libs.ui)
+    implementation(libs.androidx.compose.ui.ui)
+    implementation(libs.androidx.foundation)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
@@ -76,6 +79,7 @@ dependencies {
     implementation ("com.squareup.moshi:moshi-kotlin:1.14.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    //testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -87,5 +91,7 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.8")
     testImplementation("app.cash.turbine:turbine:1.0.0")
     testImplementation("com.google.truth:truth:1.1.5")
+    //iconos
+    implementation("androidx.compose.material:material-icons-extended:1.6.1")
 
 }
