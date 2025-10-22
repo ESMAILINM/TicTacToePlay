@@ -2,7 +2,7 @@ package edu.ucne.TicTacToePlay.tareas.repository
 
 import edu.ucne.TicTacToePlay.domain.model.Jugador
 import edu.ucne.TicTacToePlay.domain.repository.JugadorRepository
-import edu.ucne.TicTacToePlay.tareas.local.JugadorDao
+import edu.ucne.TicTacToePlay.tareas.local.dao.JugadorDao
 import edu.ucne.TicTacToePlay.tareas.mapper.toDomain
 import edu.ucne.TicTacToePlay.tareas.mapper.toEntity
 import kotlinx.coroutines.flow.Flow

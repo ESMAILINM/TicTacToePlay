@@ -4,8 +4,12 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import edu.ucne.TicTacToePlay.data.repository.PartidaRepositoryImpl
 import edu.ucne.TicTacToePlay.domain.repository.JugadorRepository
+import edu.ucne.TicTacToePlay.domain.repository.LogroRepository
+import edu.ucne.TicTacToePlay.domain.repository.PartidaRepository
 import edu.ucne.TicTacToePlay.tareas.repository.JugadorRepositoryImpl
+import edu.ucne.TicTacToePlay.tareas.repository.LogroRepositoryImpl
 import javax.inject.Singleton
 
 @Module
@@ -16,4 +20,17 @@ abstract class AppModule {
     abstract fun bindJugadorRepository(
         jugadorRepositoryImpl: JugadorRepositoryImpl
     ): JugadorRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindPartidaRepository(
+        partidaRepositoryImpl: PartidaRepositoryImpl
+    ): PartidaRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindLogroRepository(
+        logroRepositoryImpl: LogroRepositoryImpl
+    ): LogroRepository
+
 }

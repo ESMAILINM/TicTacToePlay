@@ -20,7 +20,6 @@ private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40
-
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),
@@ -45,6 +44,7 @@ fun TicTacToePlayTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
+
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
@@ -54,4 +54,5 @@ fun TicTacToePlayTheme(
         typography = Typography,
         content = content
     )
+
 }

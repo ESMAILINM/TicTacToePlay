@@ -1,0 +1,192 @@
+package edu.ucne.TicTacToePlay.presentation.jugador.list
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import edu.ucne.TicTacToePlay.domain.model.Jugador
+import edu.ucne.TicTacToePlay.navigation.Screen
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ListJugadorScreen(
+    navController: NavController,
+    viewModel: JugadorListViewModel = hiltViewModel()
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { navController.navigate(Screen.Jugador.createRoute(0)) },
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Añadir jugador")
+            }
+        }
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+        ) {
+            when {
+                state.isLoading -> {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
+                state.jugadores.isEmpty() -> {
+                    Text(
+                        "No hay jugadores. ¡Añade uno!",
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(state.jugadores, key = { it.jugadorId }) { jugador ->
+                            JugadorItem(
+                                jugador = jugador,
+                                onJugadorClick = {
+                                    navController.navigate(
+                                        Screen.Jugador.createRoute(jugador.jugadorId)
+                                    )
+                                },
+                                onDeleteClick = {
+                                    viewModel.onEvent(
+                                        ListJugadorUiEvent.OnDeleteJugadorClick(jugador)
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun JugadorItem(
+    jugador: Jugador,
+    onJugadorClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(onClick = onJugadorClick)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(jugador.nombres, style = MaterialTheme.typography.titleMedium)
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("Partidas: ${jugador.partidas}", style = MaterialTheme.typography.bodyMedium)
+            }
+            IconButton(onClick = onDeleteClick) {
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = "Eliminar jugador",
+                    tint = MaterialTheme.colorScheme.error
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun JugadorItemPreview() {
+    JugadorItem(
+        jugador = Jugador(jugadorId = 1, nombres = "Juan Pérez", partidas = 5),
+        onJugadorClick = {},
+        onDeleteClick = {}
+    )
+}
+@Composable
+fun ListJugadorScreenContent(
+    state: ListJugadorUiState,
+    onJugadorClick: (Jugador) -> Unit = {},
+    onDeleteClick: (Jugador) -> Unit = {},
+    onAddClick: () -> Unit = {}
+) {
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = onAddClick,
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Añadir jugador")
+            }
+        }
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+        ) {
+            when {
+                state.isLoading -> {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
+                state.jugadores.isEmpty() -> {
+                    Text(
+                        "No hay jugadores. ¡Añade uno!",
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(state.jugadores, key = { it.jugadorId }) { jugador ->
+                            JugadorItem(
+                                jugador = jugador,
+                                onJugadorClick = { onJugadorClick(jugador) },
+                                onDeleteClick = { onDeleteClick(jugador) }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 400, heightDp = 700)
+@Composable
+fun ListJugadorScreenPreview() {
+    ListJugadorScreenContent(
+        state = ListJugadorUiState(
+            isLoading = false,
+            jugadores = listOf(
+                Jugador(1, "Juan Pérez", 5),
+                Jugador(2, "Ana Gómez", 3)
+            )
+        )
+    )
+}
+
