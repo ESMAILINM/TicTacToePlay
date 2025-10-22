@@ -9,8 +9,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.VideogameAsset
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -19,12 +22,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import kotlinx.coroutines.launch
 import edu.ucne.TicTacToePlay.presentation.jugador.edit.EditJugadorScreen
@@ -33,6 +39,8 @@ import edu.ucne.TicTacToePlay.presentation.partida.EditPartidaScreen
 import edu.ucne.TicTacToePlay.presentation.partida.list.ListPartidaScreen
 import edu.ucne.TicTacToePlay.presentation.logro.edit.EditLogroScreen
 import edu.ucne.TicTacToePlay.presentation.logro.list.ListLogroScreen
+import edu.ucne.TicTacToePlay.presentation.tictactoe.TicTacToeScreen
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TicTacToeNavHost(navHostController: NavHostController) {
@@ -53,11 +61,11 @@ fun TicTacToeNavHost(navHostController: NavHostController) {
  val currentScreenIconAndTitle = when (selectedItem.value) {
   Screen.ListJugador.route -> Icons.Filled.Person to "Jugadores"
   Screen.Jugador.route -> Icons.Filled.Person to "Editar Jugador"
-  Screen.ListPartida.route -> Icons.AutoMirrored.Filled.List to "Partidas"
-  Screen.Partida.route -> Icons.AutoMirrored.Filled.List to "Editar Partida"
+  Screen.ListPartida.route -> Icons.Filled.SportsEsports to "Partidas"
+  Screen.Partida.route -> Icons.Filled.SportsEsports to "Editar Partida"
   Screen.ListLogro.route -> Icons.Filled.Star to "Logros"
   Screen.Logro.route -> Icons.Filled.Star to "Editar Logro"
-  else -> Icons.Filled.Star to "Tic Tac Toe"
+  else -> Icons.Filled.VideogameAsset to "Tic Tac Toe"
  }
 
  ModalNavigationDrawer(
@@ -85,7 +93,7 @@ fun TicTacToeNavHost(navHostController: NavHostController) {
 
       DrawerItem(
        title = "Partidas",
-       icon = Icons.AutoMirrored.Filled.List,
+       icon = Icons.Filled.SportsEsports,
        isSelected = selectedItem.value == Screen.ListPartida.route,
        screen = Screen.ListPartida
       ) { handleItemClick(it) }
@@ -107,17 +115,17 @@ fun TicTacToeNavHost(navHostController: NavHostController) {
     TopAppBar(
      title = {
       Row(verticalAlignment = Alignment.CenterVertically) {
-       Icon(
-        imageVector = currentScreenIconAndTitle.first,
-        contentDescription = null,
-        modifier = Modifier.padding(end = 8.dp)
-       )
        Text(currentScreenIconAndTitle.second)
+//       Icon(
+//        imageVector = currentScreenIconAndTitle.first,
+//        contentDescription = null,
+//        modifier = Modifier.padding(end = 8.dp)
+//       )
       }
      },
      navigationIcon = {
       IconButton(onClick = { scope.launch { drawerState.open() } }) {
-       Icon(Icons.Filled.ArrowBack, contentDescription = "Menu")
+       Icon(Icons.Filled.Menu, contentDescription = "Menu")
       }
      }
     )
@@ -170,7 +178,57 @@ fun TicTacToeNavHost(navHostController: NavHostController) {
      selectedItem.value = Screen.Logro.route
      EditLogroScreen(navController = navHostController, logroId = id)
     }
+
+    composable(
+     route = Screen.TicTacToe.route,
+     arguments = listOf(navArgument("jugadorId") { type = androidx.navigation.NavType.IntType })
+    ) { backStackEntry ->
+     val jugadorId = backStackEntry.arguments?.getInt("jugadorId")
+     selectedItem.value = Screen.TicTacToe.route
+     TicTacToeScreen(navController = navHostController, jugadorId = jugadorId)
+    }
+
    }
   }
  }
+}
+@Preview(showBackground = true, widthDp = 400, heightDp = 700)
+@Composable
+fun TicTacToeNavHostPreview() {
+ val navController = rememberNavController()
+ TicTacToeNavHost(navHostController = navController)
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TicTacToeTopAppBar(
+ icon: ImageVector,
+ title: String,
+ onMenuClick: () -> Unit = {}
+) {
+ TopAppBar(
+  title = {
+   Row(verticalAlignment = Alignment.CenterVertically) {
+    Icon(
+     imageVector = icon,
+     contentDescription = null,
+     modifier = Modifier.padding(end = 8.dp)
+    )
+    Text(title)
+   }
+  },
+  navigationIcon = {
+   IconButton(onClick = onMenuClick) {
+    Icon(Icons.Filled.ArrowBack, contentDescription = "Menu")
+   }
+  }
+ )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TicTacToeTopAppBarPreview() {
+ TicTacToeTopAppBar(
+  icon = Icons.Filled.Person,
+  title = "Jugadores"
+ )
 }
