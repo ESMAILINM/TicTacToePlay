@@ -12,7 +12,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "edu.ucne.TicTacToePlay"
+        applicationId = "edu.ucne.composedemo"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
@@ -67,17 +67,13 @@ dependencies {
     implementation(libs.androidx.foundation)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+
     // optional - Kotlin Extensions and Coroutines support for Room
 
     //Hilt
-    implementation("com.google.dagger:hilt-android:2.57.1")
-    ksp("com.google.dagger:hilt-compiler:2.57.1")
+    implementation ("com.google.dagger:hilt-android:2.57.1")
+    ksp("com.google.dagger:hilt-android-compiler:2.57.1")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    implementation("androidx.work:work-runtime-ktx:2.8.1")
-    implementation("androidx.hilt:hilt-work:1.0.0")
-    ksp("androidx.hilt:hilt-compiler:1.0.0")
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
     //retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.moshi:moshi-kotlin:1.14.0")

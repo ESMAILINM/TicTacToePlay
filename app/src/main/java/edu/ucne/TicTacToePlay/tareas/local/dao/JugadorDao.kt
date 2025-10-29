@@ -1,11 +1,10 @@
-// kotlin
-// File: app/src/main/java/edu/ucne/TicTacToePlay/tareas/local/dao/JugadorDao.kt
 package edu.ucne.TicTacToePlay.tareas.local.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
+import edu.ucne.TicTacToePlay.domain.model.Jugador
 import edu.ucne.TicTacToePlay.tareas.local.entities.JugadorEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -15,7 +14,7 @@ interface JugadorDao {
     fun observeAll(): Flow<List<JugadorEntity>>
 
     @Query("SELECT * FROM Jugadores WHERE jugadorId = :id")
-    suspend fun getById(id: String): JugadorEntity?
+    suspend fun getById(id: Int): JugadorEntity?
 
     @Upsert
     suspend fun upsert(jugador: JugadorEntity)
@@ -24,11 +23,10 @@ interface JugadorDao {
     suspend fun delete(jugador: JugadorEntity)
 
     @Query("DELETE FROM Jugadores WHERE jugadorId = :id")
-    suspend fun delete(id: String)
+    suspend fun delete(id: Int)
 
-    @Query("SELECT * FROM Jugadores WHERE nombres COLLATE NOCASE = :name LIMIT 1")
-    suspend fun getJugadorByName(name: String): JugadorEntity?
+    @Query("SELECT * FROM jugadores WHERE Nombres COLLATE NOCASE = :name COLLATE NOCASE LIMIT 1")
+    suspend fun getJugadorByName(name: String): Jugador?
 
-    @Query("SELECT * FROM Jugadores WHERE isPendingCreate = 1")
-    suspend fun getJugadoresPendingCreate(): List<JugadorEntity>
+
 }

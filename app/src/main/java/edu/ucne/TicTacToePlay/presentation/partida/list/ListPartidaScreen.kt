@@ -35,9 +35,7 @@ fun ListPartidaScreen(
     val jugadoresState by jugadorViewModel.state.collectAsStateWithLifecycle()
 
     val jugadorMap = remember(jugadoresState.jugadores) {
-        jugadoresState.jugadores.mapNotNull { jugador ->
-            jugador.jugadorId.toIntOrNull()?.let { id -> id to jugador.nombres }
-        }.toMap()
+        jugadoresState.jugadores.associateBy({ it.jugadorId }, { it.nombres })
     }
 
     Scaffold(
