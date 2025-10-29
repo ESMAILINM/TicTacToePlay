@@ -71,7 +71,7 @@ class ListPartidaViewModel @Inject constructor(
             val jugadoresExistentes = jugadorRepository.observeJugador().first()
             if (jugadoresExistentes.isEmpty()) {
                 listOf("Juan", "Ana", "Luis").forEach { nombre ->
-                    jugadorRepository.upsertJugador(Jugador(nombres = nombre, partidas = 6))
+                    jugadorRepository.upsertJugador(Jugador(nombres = nombre, email = ""))
                 }
             }
         }

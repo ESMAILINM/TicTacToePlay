@@ -47,11 +47,11 @@ fun EditPartidaScreen(
     }
 
     val jugador1Name =
-        jugadoresState.jugadores.find { it.jugadorId == state.jugador1Id }?.nombres ?: ""
+        jugadoresState.jugadores.find { it.jugadorId.toInt() == state.jugador1Id }?.nombres ?: ""
     val jugador2Name =
-        jugadoresState.jugadores.find { it.jugadorId == state.jugador2Id }?.nombres ?: ""
+        jugadoresState.jugadores.find { it.jugadorId.toInt() == state.jugador2Id }?.nombres ?: ""
     val ganadorName =
-        jugadoresState.jugadores.find { it.jugadorId == state.ganadorId }?.nombres ?: ""
+        jugadoresState.jugadores.find { it.jugadorId.toInt() == state.ganadorId }?.nombres ?: ""
 
     Scaffold(
         topBar = { TopAppBar(title = { Text(if (state.isNew) "Nueva Partida" else "Editar Partida") }) },
@@ -173,9 +173,9 @@ fun EditPartidaScreen(
             onDismiss = { showJugadorSheet = false },
             onJugadorSelected = { jugador ->
                 if (selectingJugador1) {
-                    viewModel.onEvent(EditPartidaUiEvent.Jugador1Changed(jugador.jugadorId))
+                    viewModel.onEvent(EditPartidaUiEvent.Jugador1Changed(jugador.jugadorId.toInt()))
                 } else {
-                    viewModel.onEvent(EditPartidaUiEvent.Jugador2Changed(jugador.jugadorId))
+                    viewModel.onEvent(EditPartidaUiEvent.Jugador2Changed(jugador.jugadorId.toInt()))
                 }
                 showJugadorSheet = false
             }
@@ -184,14 +184,14 @@ fun EditPartidaScreen(
 
     if (showGanadorSheet) {
         val posiblesGanadores = listOfNotNull(
-            jugadoresState.jugadores.find { it.jugadorId == state.jugador1Id },
-            jugadoresState.jugadores.find { it.jugadorId == state.jugador2Id }
+            jugadoresState.jugadores.find { it.jugadorId.toInt() == state.jugador1Id },
+            jugadoresState.jugadores.find { it.jugadorId.toInt() == state.jugador2Id }
         )
         JugadorSelectionSheet(
             jugadores = posiblesGanadores,
             onDismiss = { showGanadorSheet = false },
             onJugadorSelected = { jugador ->
-                viewModel.onEvent(EditPartidaUiEvent.GanadorChanged(jugador.jugadorId))
+                viewModel.onEvent(EditPartidaUiEvent.GanadorChanged(jugador.jugadorId.toInt()))
                 showGanadorSheet = false
             }
         )
