@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -148,7 +149,7 @@ fun TicTacToeNavHost(navHostController: NavHostController) {
     ) { backStackEntry ->
      val id = backStackEntry.arguments?.getInt("jugadorId")
      selectedItem.value = Screen.Jugador.route
-     EditJugadorScreen(navController = navHostController, jugadorId = id)
+     EditJugadorScreen(navController = navHostController, jugadorId = id.toString())
     }
 
     composable(Screen.ListPartida.route) {
@@ -156,14 +157,14 @@ fun TicTacToeNavHost(navHostController: NavHostController) {
      ListPartidaScreen(navController = navHostController)
     }
 
-    composable(
-     route = Screen.Partida.route,
-     arguments = listOf(navArgument("partidaId") { type = androidx.navigation.NavType.IntType })
-    ) { backStackEntry ->
-     val id = backStackEntry.arguments?.getInt("partidaId")
-     selectedItem.value = Screen.Partida.route
-     EditPartidaScreen(navController = navHostController, partidaId = id)
-    }
+//    composable(
+//     route = Screen.Partida.route,
+//     arguments = listOf(navArgument("partidaId") { type = androidx.navigation.NavType.IntType })
+//    ) { backStackEntry ->
+//     val id = backStackEntry.arguments?.getInt("partidaId")
+//     selectedItem.value = Screen.Partida.route
+//     EditPartidaScreen(navController = navHostController, partidaId = id)
+//    }
 
     composable(Screen.ListLogro.route) {
      selectedItem.value = Screen.ListLogro.route
@@ -180,18 +181,18 @@ fun TicTacToeNavHost(navHostController: NavHostController) {
     }
 
     composable(
-     route = Screen.TicTacToe.route,
-     arguments = listOf(navArgument("jugadorId") { type = androidx.navigation.NavType.IntType })
+     route = Screen.Jugador.route,
+     arguments = listOf(navArgument("jugadorId") { type = NavType.StringType })
     ) { backStackEntry ->
-     val jugadorId = backStackEntry.arguments?.getInt("jugadorId")
-     selectedItem.value = Screen.TicTacToe.route
-     TicTacToeScreen(navController = navHostController, jugadorId = jugadorId)
+     val id = backStackEntry.arguments?.getString("jugadorId")
+     EditJugadorScreen(navController = navHostController, jugadorId = id)
     }
+   }
+
 
    }
   }
  }
-}
 @Preview(showBackground = true, widthDp = 400, heightDp = 700)
 @Composable
 fun TicTacToeNavHostPreview() {
