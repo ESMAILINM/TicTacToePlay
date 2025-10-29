@@ -7,7 +7,7 @@ sealed class Screen(val route: String) {
     object ListLogro : Screen("list_logro_screen")
 
     object Jugador : Screen("edit_jugador_screen/{jugadorId}") {
-        fun createRoute(jugadorId: Int) = "edit_jugador_screen/$jugadorId"
+        fun createRoute(jugadorId: String) = "edit_jugador_screen/$jugadorId"
     }
 
     object Partida : Screen("edit_partida_screen/{partidaId}") {
